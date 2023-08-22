@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  ImageBackground,
   Image,
   TextInput,
   TouchableOpacity,
@@ -10,9 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { appLoaded } from '../../core/redux/actions/appActions';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Favourites from '../favourites/favourites';
-import Forecast from '../forecast/forecast';
 import {deviceHeight} from '../Dimensions';
 
 const Home = (props: any): JSX.Element => {
