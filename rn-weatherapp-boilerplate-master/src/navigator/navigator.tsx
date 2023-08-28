@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import Forecast from '../screens/forecast/forecast';
-import { Image, View } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import Styles from '../styles/styles';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppDispatch } from '../hooks';
+import { GeolocationResponse } from '@react-native-community/geolocation';
+import { clearCurrentLocation, updateCurrentLocation } from '../core/redux/actions/appActions';
+import { requestLocationAccess, getCurrentLocation, locationConfig } from '../features/geoLocation/geoLocation';
 
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
 const getTabIcon = (tabName: string, focused: boolean) => {
   return (
@@ -64,6 +67,31 @@ const RootStackNavigator = () => {
 };
 
 const Navigator = () => {
+  const dispatch = useAppDispatch();
+
+  const getPosition = async () => {
+    try {
+      const isLocationPermissionEnabled = await requestLocationAccess();
+      if (isLocationPermissionEnabled) {
+        dispatch(clearCurrentLocation());
+        const position = (await getCurrentLocation()) as GeolocationResponse;
+        dispatch(updateCurrentLocation(position));
+        return position;
+      }
+    } catch (e) {
+      console.log(e);
+      Alert.alert(
+        'Weather App',
+        'Somthing went wrong. Please make sure your location services enabled and permission',
+      );
+    }
+  };
+
+  useEffect(() => {
+    locationConfig();
+    getPosition();
+  });
+
   return (
     <NavigationContainer>
       <SafeAreaView edges={['left']} style={[Styles.container]}>

@@ -80,6 +80,10 @@ const fetchWeatherDetails = async (
   try {
     const req = getRequestObject(EndPoints.currentWeather, data);
     const response = (await makeApiRequest(req)) as APIResponse;
+    console.log("fetchWeatherDetails ------> ")
+    console.log("Request:", req)
+    console.log("Responsed:", response)
+
     if (response?.cod === AppConstants.apiSuccess) {
       return response;
     } else {
@@ -106,6 +110,8 @@ export const getCity = createAppAsyncThunk(
     try {
       const req = getRequestObject(EndPoints.getGeoCode, data);
       const response = (await makeApiRequest(req)) as GetCityResponse[];
+      console.log("Request:", req)
+      console.log("Responsed:", response)
       if (response.length > 0) {
         return response;
       } else {
@@ -124,6 +130,11 @@ const fetchWeatherForecast = async (
   try {
     const req = getRequestObject(EndPoints.dailyForecast, data);
     const response = (await makeApiRequest(req)) as APIResponse;
+
+    console.log("fetchWeatherForecast ------> ")
+    console.log("Request:", req)
+    console.log("Responsed:", response)
+
     if (parseInt(response?.cod as string, 10) === AppConstants.apiSuccess) {
       return response;
     } else {

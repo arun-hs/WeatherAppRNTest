@@ -56,6 +56,7 @@ export const weatherSlice = createSlice({
       .addCase(getCity.fulfilled, (state, action) => {
         state.searchCities = action.payload ? action.payload : [];
         state.loading = false;
+        console.log(action.payload)
       })
       .addCase(getCity.pending, state => {
         state.loading = true;

@@ -1,9 +1,19 @@
-import { ImageStyle } from 'react-native';
+import { ImageStyle, ViewStyle } from 'react-native';
 
 const Styles = {
   tabIconStyle: {
     width: 22,
     height: 22,
+    resizeMode: 'contain',
+  } as ImageStyle,
+  mediumIcon: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
+  } as ImageStyle,
+  weatherIconStyle: {
+    height: 78,
+    width: 78,
     resizeMode: 'contain',
   } as ImageStyle,
   activeTab: {
@@ -23,10 +33,36 @@ const Styles = {
     justifyContent: 'center',
     paddingHorizontal: 16,
   },
+  whiteBackgroundColor:{
+    backgroundColor: 'white',
+  },
+  lightGrayBackgroundColor:{
+    backgroundColor: 'lightgray',
+  },
   heading: {
     fontSize: 16,
     color:'black',
-  }
+  },
+  formError: {
+    fontSize: 10,
+    color: 'red',
+  },
+  paddingVertical16: {
+    paddingVertical: 16,
+  },
+  paddingHorizontal8: {
+    paddingHorizontal: 8,
+  },
+  marginLeft8: {
+    marginLeft: 8,
+  },
+  textCenter: {
+    alignItems: 'center',
+  } as ViewStyle,
+  alignCenter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
 };
 
 export default Styles;

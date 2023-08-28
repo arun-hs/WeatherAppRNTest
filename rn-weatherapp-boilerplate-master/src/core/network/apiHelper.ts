@@ -6,6 +6,9 @@ import {
   ReqDataType,
 } from './types';
 
+console.log("Base Url", API_BASE_URL);
+console.log("API_KEY", API_KEY);
+
 export const EndPoints: AppEndPointsType = {
   currentWeather: '/data/2.5/weather',
   dailyForecast: '/data/2.5/forecast/daily',
