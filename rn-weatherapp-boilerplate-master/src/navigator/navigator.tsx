@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import Forecast from '../screens/forecast/forecast';
 import { Alert, Image, View } from 'react-native';
@@ -31,29 +30,6 @@ const getTabIcon = (tabName: string, focused: boolean) => {
     </View>
   );
 };
-
-// const TabNavigator = () => {
-//   return (
-//     <Tab.Navigator
-//       initialRouteName={'Home'}
-//       screenOptions={{ headerShown: false }}>
-//       <Tab.Screen
-//         name={'Home'}
-//         component={Home}
-//         options={{
-//           tabBarIcon: ({ focused }) => getTabIcon('Home', focused),
-//         }}
-//       />
-//       <Tab.Screen
-//         name={'Forecast'}
-//         component={Forecast}
-//         options={{
-//           tabBarIcon: ({ focused }) => getTabIcon('Forecast', focused),
-//         }}
-//       />
-//     </Tab.Navigator>
-//   );
-// };
 
 const RootStackNavigator = () => {
   return (

@@ -1,6 +1,7 @@
 import { CarouselTileProps } from "./types";
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { AppTestIds } from "../../utils/testUtils/testIds";
 
 const CarouselTile = ({
     title,
@@ -8,9 +9,9 @@ const CarouselTile = ({
     onCarouselTilePress,
 }: CarouselTileProps) => {
     return (
-        <View>
+        <View testID={AppTestIds.CarouselComponent}>
             {onCarouselTilePress ? (
-                <TouchableOpacity style={{ marginHorizontal: 10 }} onPress={() => onCarouselTilePress()}>
+                <TouchableOpacity style={{ marginHorizontal: 10 }} onPress={() => onCarouselTilePress()} testID={AppTestIds.SearchSelectCity}>
                     <View style={{ flex: 1 }}>
                         <ImageBackground
                             source={require('../../assets/images/tile.png')}

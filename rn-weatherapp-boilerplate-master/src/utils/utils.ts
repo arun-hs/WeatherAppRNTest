@@ -1,9 +1,10 @@
-// import { ASSET_BASE_URL } from '@env';
+import { ASSET_BASE_URL } from '@env';
 import { EndPoints } from '../core/network/apiHelper';
 import { AppConstants } from '../config/constants';
 
 const loadWeatherIcons = (iconId: string) => {
-  return "http://openweathermap.org" + '/' + EndPoints.getIcon + `/${iconId}.png`;
+  console.log(ASSET_BASE_URL + '/' + EndPoints.getIcon + `/${iconId}@2x.png`)
+  return ASSET_BASE_URL + '/' + EndPoints.getIcon + `/${iconId}@2x.png`;
 };
 
 const getRoundOfTemp = (temp: string) => {

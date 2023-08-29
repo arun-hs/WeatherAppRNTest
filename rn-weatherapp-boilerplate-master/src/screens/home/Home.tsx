@@ -7,8 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Favourites from '../favourites/favourites';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { RootState } from '../../core/redux/store';
 import { useNavigation } from '@react-navigation/native';
@@ -16,14 +14,13 @@ import { GetCityResponse, WeatherResponse } from '../../types/types';
 import { AppConstants } from '../../config/constants';
 import { weatherActions } from '../../core/redux/reducers/appReducer';
 import { appLoaded, getCity, getCurrentWeatherInfo, getSelectedLocationWeatherForecast, getSelectedLocationWeatherInfo, updateSelectedCity } from '../../core/redux/actions/appActions';
-import ErrorInfo from '../../components/errorInfo/errorInfo';
 import Utils from '../../utils/utils';
 import CarouselTile from '../../components/carouselTile/carouselTile';
-import Styles from '../../styles/styles';
+import { AppTestIds } from '../../utils/testUtils/testIds';
 
-const Home = (props: any): JSX.Element => {
+const Home = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [city, setCity] = useState('');
   
@@ -68,45 +65,47 @@ const Home = (props: any): JSX.Element => {
   };
 
   //for forecast
-  const selectCity = (city: GetCityResponse) => {
+  const selectCity = (city: GetCityResponse, isCurrentLocation: boolean) => {
     console.log("inside selectCity")
-    dispatch(updateSelectedCity(city));
-    
-    fetchWeatherAndForecastInfo(city.lat, city.lon);
-  };
+    console.log(city.isWatchlist, city.name)
+    dispatch(updateSelectedCity(isCurrentLocation ? null : city));
 
-  //splitted above selectCity method so as to suit for navigation for current loc by currentGeoLocation obj lat long innstead GetCityResponse all the time...
-  const fetchWeatherAndForecastInfo = (latitude: number, longitude:number) => {
-    console.log("inside fetchWeatherAndForecastInfo")
-    console.log("input city name:",latitude, longitude)
+    console.log(selectedLocation?"selectedLocation":"selectedLocation is null")
     dispatch(
       getSelectedLocationWeatherInfo({
-        lat: latitude,
-        lon: longitude,
+        lat: city.lat,
+        lon: city.lon,
         units: AppConstants.Celsius.value,
       }),
     );
     dispatch(
       getSelectedLocationWeatherForecast({
-        lat: latitude,
-        lon: longitude,
+        lat: city.lat,
+        lon: city.lon,
         units: AppConstants.Celsius.value,
         cnt: 5,
       }),
     );
     dispatch(weatherActions.clearSearchCity());
     
-    navigation.navigate('Forecast');
+    navigation.navigate('Forecast' as never); //toDo:
   };
 
   //toDo:
   const renderWeatherDetails = (weatherInfo: WeatherResponse) => {
+    const currentCity: GetCityResponse = { name:currentWeatherInformation?.name as string, 
+      lat:currentWeatherInformation?.coord.lat as number, 
+      lon:currentWeatherInformation?.coord.lon as number,
+      country:currentWeatherInformation?.sys.country as string,
+      state:""
+    };  
+    
     return (
-      <View>
-        <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold', paddingBottom: 10 }}>
+      <View testID={AppTestIds.HomeView}>
+        <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold', paddingBottom: 5 }}>
           Current location weather details
         </Text>
-        <TouchableOpacity style={{ backgroundColor: 'gray', borderRadius: 16 }} onPress={() => fetchWeatherAndForecastInfo(currentGeoLocation?.coords.latitude, currentGeoLocation?.coords.longitude)}>
+        <TouchableOpacity style={{ backgroundColor: 'gray', borderRadius: 16, paddingBottom:5 }} onPress={() => selectCity(currentCity, true)}>
           <Text style={{ color: 'white', fontSize: 30, textAlign: "center" }}>{weatherInfo?.name}</Text>
           <Text style={{ fontSize: 30, color: 'white', textAlign: "center" }}>{Utils.getRoundOfTemp(weatherInfo?.main.temp)}</Text>
         </TouchableOpacity>
@@ -115,9 +114,9 @@ const Home = (props: any): JSX.Element => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID={AppTestIds.HomeScreenWeatherView}>
       <View style={{ flex: 1, backgroundColor: 'red', paddingHorizontal: 20, paddingVertical: 20 }}>
-        <View style={{ flex: 1, backgroundColor: 'black' }}>
+        <View style={{ flex: 1, backgroundColor: '', paddingBottom:20, paddingTop:5 }}>
           {currentWeatherInformation ? (
             renderWeatherDetails(currentWeatherInformation)
           ) : (
@@ -127,7 +126,7 @@ const Home = (props: any): JSX.Element => {
           )}
         </View>
 
-        <View style={{ flex: 3, backgroundColor: 'black' }}>
+        <View style={{ flex: 3, backgroundColor: '' }}>
           <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold' }}>
             Search city by name
           </Text>
@@ -149,6 +148,7 @@ const Home = (props: any): JSX.Element => {
               placeholder="Search City"
               placeholderTextColor={'lightgray'}
               style={{ paddingHorizontal: 10, color: 'white', fontSize: 22 }}
+              testID={AppTestIds.SearchTextInput}
             />
             {/* {!validInput ? (
               <Text style={Styles.formError}>
@@ -158,7 +158,7 @@ const Home = (props: any): JSX.Element => {
               <View />
             )} */}
             
-            <TouchableOpacity onPress={() => searchCity()}>
+            <TouchableOpacity onPress={() => searchCity()} testID={AppTestIds.SearchPressable}>
               <Image
                 source={require('../../assets/images/search.png')}
                 style={{ height: 22, width: 22, borderRadius: 0 }}
@@ -176,17 +176,18 @@ const Home = (props: any): JSX.Element => {
                 horizontal={false}
                 data={searchCities}
                 renderItem={({ item }) => (
-                  <CarouselTile title={item.name} country={item.country} onCarouselTilePress={() => selectCity(item)}/>
+                  <CarouselTile title={item.name} country={item.country} onCarouselTilePress={() => selectCity(item, false)}/>
                 )}
+                testID={AppTestIds.SearchResultsList}
               />
             ) : (
               <View>
-                <Text style={{ fontSize: 16, color: 'yellow' }}>Please enter a valid city name in the search bar to see this city tile.</Text>
+                <Text style={{ fontSize: 16, color: 'yellow' }}>Please enter a valid city name in the search bar & search, to view the tappable city tile here.</Text>
               </View>
             )}
           </View>
         </View>
-        <View style={{ flex: 2, backgroundColor: 'black' }}>
+        <View style={{ flex: 2, backgroundColor: '' }}>
           <Text style={{ color: 'white', fontSize: 25, paddingHorizontal: 10, fontWeight: 'bold' }}>
             Favourites
           </Text>
@@ -197,7 +198,7 @@ const Home = (props: any): JSX.Element => {
             horizontal={true}
             data={favouriteLocations}
             renderItem={({ item }) => (
-              <CarouselTile title={item.name} country="" onCarouselTilePress={() => selectCity(item)}/>
+              <CarouselTile title={item.name} country="" onCarouselTilePress={() => selectCity(item, false)}/>
             )}
           />
           ) : (
