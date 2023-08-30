@@ -11,33 +11,32 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { RootState } from '../../core/redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { GetCityResponse, WeatherResponse } from '../../types/types';
-import { AppConstants } from '../../config/constants';
+import { AppConstants } from '../../constants/constants';
 import { weatherActions } from '../../core/redux/reducers/appReducer';
 import { appLoaded, getCity, getCurrentWeatherInfo, getSelectedLocationWeatherForecast, getSelectedLocationWeatherInfo, updateSelectedCity } from '../../core/redux/actions/appActions';
 import Utils from '../../utils/utils';
 import CarouselTile from '../../components/carouselTile/carouselTile';
 import { AppTestIds } from '../../utils/testUtils/testIds';
+import { HomeStyle } from './styles';
+import Styles from '../../styles/styles';
 
 const Home = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
 
-  const [city, setCity] = useState('');
-  
+  const [city, setCity] = useState(''); //to hold search bar input   
   // const [searchText, setSearchText] = useState('');//onSearchBarTextDidChange
   const [validInput, setValidInput] = useState(true);
 
-  const getWeather = (state: RootState) => state.weather; //From Redux it updates data after async call"
+  const getWeather = (state: RootState) => state.weather; //From Redux it updates data after async call
   const getAppState = (state: RootState) => state.App;
 
-  const { currentWeatherInformation, selectedLocationWeather } =
-    useAppSelector(getWeather);
+  const { currentWeatherInformation, selectedLocationWeather } = useAppSelector(getWeather);
   const { currentGeoLocation, selectedLocation } = useAppSelector(getAppState);
 
   const { searchCities, loading } = useAppSelector(getWeather);
   const { favouriteLocations } = useAppSelector(getAppState);
-
-  this.cityTextInput = React.createRef();
   
   useEffect(() => {
     dispatch(appLoaded());
@@ -61,12 +60,12 @@ const Home = () => {
     } else {
       setValidInput(false);
     }
-    this.cityTextInput.current.clear(); // clearing search bar post search tap event/action
+    setCity('') // clearing search bar post search 
   };
 
   //for forecast
-  const selectCity = (city: GetCityResponse, isCurrentLocation: boolean) => {
-    console.log("inside selectCity")
+  const fetchAndNavigateToForecastScreen = (city: GetCityResponse, isCurrentLocation: boolean) => {
+    console.log("inside fetchAndNavigateToForecastScreen")
     console.log(city.isWatchlist, city.name)
     dispatch(updateSelectedCity(isCurrentLocation ? null : city));
 
@@ -88,24 +87,24 @@ const Home = () => {
     );
     dispatch(weatherActions.clearSearchCity());
     
-    navigation.navigate('Forecast' as never); //toDo:
+    navigation.navigate('Forecast');
   };
 
-  //toDo:
-  const renderWeatherDetails = (weatherInfo: WeatherResponse) => {
+  // Render user's current location details 
+  const renderCurrentLocWeatherDetails = (weatherInfo: WeatherResponse) => {
     const currentCity: GetCityResponse = { name:currentWeatherInformation?.name as string, 
       lat:currentWeatherInformation?.coord.lat as number, 
       lon:currentWeatherInformation?.coord.lon as number,
       country:currentWeatherInformation?.sys.country as string,
       state:""
     };  
-    
+    //{[Styles.container, ForecastStyle.cardStyle, Styles.forecastFlatListBackgroundColor]}
     return (
       <View testID={AppTestIds.HomeView}>
         <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold', paddingBottom: 5 }}>
           Current location weather details
         </Text>
-        <TouchableOpacity style={{ backgroundColor: 'gray', borderRadius: 16, paddingBottom:5 }} onPress={() => selectCity(currentCity, true)}>
+        <TouchableOpacity style={HomeStyle.currentLocationTile} onPress={() => fetchAndNavigateToForecastScreen(currentCity, true)}>
           <Text style={{ color: 'white', fontSize: 30, textAlign: "center" }}>{weatherInfo?.name}</Text>
           <Text style={{ fontSize: 30, color: 'white', textAlign: "center" }}>{Utils.getRoundOfTemp(weatherInfo?.main.temp)}</Text>
         </TouchableOpacity>
@@ -114,11 +113,11 @@ const Home = () => {
   }
 
   return (
-    <View style={{ flex: 1 }} testID={AppTestIds.HomeScreenWeatherView}>
-      <View style={{ flex: 1, backgroundColor: 'red', paddingHorizontal: 20, paddingVertical: 20 }}>
-        <View style={{ flex: 1, backgroundColor: '', paddingBottom:20, paddingTop:5 }}>
+    <View style={Styles.flex1} testID={AppTestIds.HomeScreenWeatherView}>
+      <View style={[Styles.flex1, Styles.appBackgroundThemeColor, Styles.padding_v_h_20]}>
+        <View style={{ flex: 1, paddingBottom:20, paddingTop:5 }}>
           {currentWeatherInformation ? (
-            renderWeatherDetails(currentWeatherInformation)
+            renderCurrentLocWeatherDetails(currentWeatherInformation)
           ) : (
             <View>
                 <Text style={{ fontSize: 16, color: 'lightgray', paddingHorizontal: 20, paddingVertical: 30}}>Please enable location access to view your current location weather details tile here.</Text>
@@ -126,7 +125,7 @@ const Home = () => {
           )}
         </View>
 
-        <View style={{ flex: 3, backgroundColor: '' }}>
+        <View style={Styles.flex3}>
           <Text style={{ color: 'white', fontSize: 22, fontWeight: 'bold' }}>
             Search city by name
           </Text>
@@ -142,7 +141,6 @@ const Home = () => {
               paddingHorizontal: 10,
             }}>
             <TextInput
-              ref={this.cityTextInput}
               value={city}
               onChangeText={val => setCity(val)}
               placeholder="Search City"
@@ -161,7 +159,7 @@ const Home = () => {
             <TouchableOpacity onPress={() => searchCity()} testID={AppTestIds.SearchPressable}>
               <Image
                 source={require('../../assets/images/search.png')}
-                style={{ height: 22, width: 22, borderRadius: 0 }}
+                style={HomeStyle.searchIcon}
               />
             </TouchableOpacity>
           </View>
@@ -176,7 +174,7 @@ const Home = () => {
                 horizontal={false}
                 data={searchCities}
                 renderItem={({ item }) => (
-                  <CarouselTile title={item.name} country={item.country} onCarouselTilePress={() => selectCity(item, false)}/>
+                  <CarouselTile title={item.name} country={item.country} onCarouselTilePress={() => fetchAndNavigateToForecastScreen(item, false)}/>
                 )}
                 testID={AppTestIds.SearchResultsList}
               />
@@ -187,7 +185,7 @@ const Home = () => {
             )}
           </View>
         </View>
-        <View style={{ flex: 2, backgroundColor: '' }}>
+        <View style={Styles.flex2}>
           <Text style={{ color: 'white', fontSize: 25, paddingHorizontal: 10, fontWeight: 'bold' }}>
             Favourites
           </Text>
@@ -198,7 +196,7 @@ const Home = () => {
             horizontal={true}
             data={favouriteLocations}
             renderItem={({ item }) => (
-              <CarouselTile title={item.name} country="" onCarouselTilePress={() => selectCity(item, false)}/>
+              <CarouselTile title={item.name} country="" onCarouselTilePress={() => fetchAndNavigateToForecastScreen(item, false)}/>
             )}
           />
           ) : (

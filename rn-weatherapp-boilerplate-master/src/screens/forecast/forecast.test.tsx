@@ -18,7 +18,7 @@ import {
 } from '../../utils/testUtils/testMockData';
 import { AppTestIds } from '../../utils/testUtils/testIds';
 import { enableFetchMocks } from 'jest-fetch-mock';
-import { AppConstants } from '../../config/constants';
+import { AppConstants } from '../../constants/constants';
 
 enableFetchMocks();
 

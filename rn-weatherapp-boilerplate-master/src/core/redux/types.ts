@@ -31,8 +31,7 @@ export interface ThunkType {
   extra?: { s: string; n: number };
 }
 
-/** Types specific to APIs */
-
+// API specific types
 export interface GetCurrentWeatherReq {
   lat: number;
   lon: number;

@@ -19,7 +19,7 @@ import {
   updateSelectedCity,
 } from '../../core/redux/actions/appActions';
 import store from '../../core/redux/store';
-import { AppConstants } from '../../config/constants';
+import { AppConstants } from '../../constants/constants';
 
 enableFetchMocks();
 
@@ -92,7 +92,7 @@ describe('Home', () => {
   });
 
   it('Favourite location list', async () => {
-    await store.dispatch(addCityToWatchlist(mockCity[0]));
+    store.dispatch(addCityToWatchlist(mockCity[0]));
     const { getAllByTestId } = renderWithRedux(<Home />);
     waitFor(() => {
       expect(

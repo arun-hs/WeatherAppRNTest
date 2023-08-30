@@ -1,6 +1,6 @@
 import { ASSET_BASE_URL } from '@env';
 import { EndPoints } from '../core/network/apiHelper';
-import { AppConstants } from '../config/constants';
+import { AppConstants } from '../constants/constants';
 
 const loadWeatherIcons = (iconId: string) => {
   console.log(ASSET_BASE_URL + '/' + EndPoints.getIcon + `/${iconId}@2x.png`)

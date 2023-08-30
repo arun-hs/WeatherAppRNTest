@@ -13,23 +13,23 @@ import { requestLocationAccess, getCurrentLocation, locationConfig } from '../fe
 
 const Stack = createStackNavigator();
 
-const getTabIcon = (tabName: string, focused: boolean) => {
-  return (
-    <View>
-      <Image
-        source={
-          tabName === 'Home'
-            ? require('../assets/images/hot.png')
-            : require('../assets/images/weather-app.png')
-        }
-        style={[
-          Styles.tabIconStyle,
-          focused ? Styles.activeTab : Styles.inActiveTab,
-        ]}
-      />
-    </View>
-  );
-};
+// const getTabIcon = (tabName: string, focused: boolean) => {
+//   return (
+//     <View>
+//       <Image
+//         source={
+//           tabName === 'Home'
+//             ? require('../assets/images/hot.png')
+//             : require('../assets/images/weather-app.png')
+//         }
+//         style={[
+//           Styles.tabIconStyle,
+//           focused ? Styles.activeTab : Styles.inActiveTab,
+//         ]}
+//       />
+//     </View>
+//   );
+// };
 
 const RootStackNavigator = () => {
   return (
@@ -70,7 +70,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      <SafeAreaView edges={['left']} style={[Styles.container]}>
+      <SafeAreaView edges={['left']} style={[Styles.flex1]}>
         <RootStackNavigator />
       </SafeAreaView>
     </NavigationContainer>

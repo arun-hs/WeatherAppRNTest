@@ -1,29 +1,52 @@
 import { ImageStyle, ViewStyle } from 'react-native';
 
 const Styles = {
-  tabIconStyle: {
-    width: 22,
-    height: 22,
-    resizeMode: 'contain',
-  } as ImageStyle,
+  appTextColor:{
+    color: 'white',
+  },
+  appBackgroundThemeColor:{
+    backgroundColor:"red"
+  },
+  tileBackgroundColor:{
+    backgroundColor: 'lightgray',
+  },
+  // tabIconStyle: {
+  //   width: 22,
+  //   height: 22,
+  //   resizeMode: 'contain',
+  // } as ImageStyle,
   mediumIcon: {
     width: 32,
     height: 32,
     resizeMode: 'contain',
   } as ImageStyle,
-  weatherIconStyle: {
+  weatherStatusIconStyle: {
     height: 78,
     width: 78,
     resizeMode: 'contain',
   } as ImageStyle,
-  activeTab: {
-    opacity: 1,
-  },
-  inActiveTab: {
-    opacity: 0.5,
-  },
-  container: {
+  // activeTab: {
+  //   opacity: 1,
+  // },
+  // inActiveTab: {
+  //   opacity: 0.5,
+  // },
+  flex1: {
     flex: 1,
+  },
+  flex2: {
+    flex: 2,
+  },
+  flex3: {
+    flex: 3,
+  },
+  padding_v_h_20: {
+    paddingVertical: 20,
+    paddingHorizontal: 20, 
+  },
+  padding_t_b_10: {
+    paddingTop: 10,
+    paddingBottom: 10, 
   },
   topBarContainer: {
     height: 56,
@@ -32,12 +55,6 @@ const Styles = {
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-  },
-  whiteBackgroundColor:{
-    backgroundColor: 'white',
-  },
-  lightGrayBackgroundColor:{
-    backgroundColor: 'lightgray',
   },
   heading: {
     fontSize: 16,

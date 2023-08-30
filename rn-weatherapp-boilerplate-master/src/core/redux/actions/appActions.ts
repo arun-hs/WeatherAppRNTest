@@ -8,7 +8,7 @@ import {
   ThunkType,
 } from '../types';
 import { GeolocationResponse } from '@react-native-community/geolocation';
-import { AppConstants } from '../../../config/constants';
+import { AppConstants } from '../../../constants/constants';
 import { APIResponse, GetCityResponse } from '../../../types/types';
 
 const createAppAsyncThunk = createAsyncThunk.withTypes<ThunkType>();
